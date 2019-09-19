@@ -7,11 +7,11 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientController : Controller
+    public class ClientsController : Controller
     {
         private readonly AppDbContext _context;
 
-        public ClientController(AppDbContext context)
+        public ClientsController(AppDbContext context)
         {
             _context = context;
         }
