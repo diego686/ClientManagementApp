@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -17,9 +19,9 @@ namespace API.Controllers
         }
         
         [HttpGet]
-        public ActionResult<List<Client>> GetAll()
+        public async Task<List<Client>> GetAllAsync()
         {
-            return _context.Clients.ToList();
+            return await _context.Clients.ToListAsync();
         }
     }
 }

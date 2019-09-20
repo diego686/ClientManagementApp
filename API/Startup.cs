@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +31,20 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 1;
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<AppDbContext>();
             services.AddCors();
+//            services.AddMvc(options =>
+//            {
+//                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+//                options.Filters.Add(new AuthorizeFilter(policy));
+//            }).AddXmlSerializerFormatters();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
