@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using API.Models;
 using API.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -27,6 +28,25 @@ namespace API.Controllers
         public ActionResult<IEnumerable<string>> Register()
         {
             return new string[] {"register1", "register2"};
+        }
+        
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    return new OkObjectResult(model.ReturnUrl);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return StatusCode(422, model);
         }
 
         [HttpPost]
